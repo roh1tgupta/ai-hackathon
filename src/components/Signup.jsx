@@ -25,8 +25,6 @@ const Signup = () => {
 
   const { value: username, bind: bindUsername } = useInput("");
   const { value: email, bind: bindEmail } = useInput("");
-  // const { value: phone, bind: bindPhone } = useInput("");
-  // const { value: company, bind: bindCompany } = useInput("");
   const { value: password, bind: bindPassword } = useInput("");
   const { value: confirmPassword, bind: bindConfirmPassword } = useInput("");
 

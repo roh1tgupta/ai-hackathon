@@ -7,6 +7,7 @@ import { Auth } from "aws-amplify";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link, useHistory } from "react-router-dom";
+import PatientPortalHeader from "./PatientPortalHeader"
 
 const Field = styled(TextField)({
   margin: "10px 0",
@@ -48,6 +49,7 @@ const Signup = () => {
       }}
       onSubmit={handleSubmit}
     >
+      <PatientPortalHeader />
       <h1 style={{ fontSize: "22px", fontWeight: 800 }}>
         {" "}
         Verify Your Account
@@ -64,7 +66,7 @@ const Signup = () => {
         {loading && <CircularProgress size={20} style={{ marginRight: 20 }} />}
         Verify your account
       </Button>
-      <DLink to="/signup">make an account &rarr;</DLink>
+      <DLink to="/signup">Create an account &rarr;</DLink>
     </form>
   );
 };

@@ -18,24 +18,22 @@ Amplify.configure({
 
 const App = () => {
   return (
-    <Box style={{ backgroundColor: "rgb(245, 245, 245)", height: "100%", position: "relative", display: "flex" }}>
+    <Box style={{ backgroundColor: "rgb(245, 245, 245)", height: "100vh", position: "relative", display: "flex" }}>
     <Router>
-      <Card style={{ width: 500, margin: "auto", padding: "40px" }}>
         <Switch>
           <Route path="/signup">
-            <Signup />
+          <Card style={{ width: 500, margin: "auto", padding: "40px" }}><Signup /> </Card>
           </Route>
           <Route path="/signin">
-            <Login />
+            <Card style={{ width: 500, margin: "auto", padding: "40px" }}><Login /> </Card>
           </Route>
           <Route path="/confirmation">
-            <Confirmation />
+            <Card style={{ width: 500, margin: "auto", padding: "40px" }}> <Confirmation /> </Card>
           </Route>
           <Route path="/">
             <ProtectedRoute component={Dashboard} />
           </Route>
         </Switch>
-      </Card>
     </Router>
     </Box>
   );
