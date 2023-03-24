@@ -10,11 +10,11 @@ export const Toast = (
     message,
     type,
     insert: "top",
-    container: "top-right",
+    container: "top-center",
     animationIn: ["animate__animated", "animate__fadeIn"],
     animationOut: ["animate__animated", "animate__fadeOut"],
     dismiss: {
-      duration: 4000,
+      duration: 2000,
       onScreen: true,
     },
   });

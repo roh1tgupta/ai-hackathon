@@ -4,10 +4,10 @@ import { styled } from "@material-ui/core/styles";
 import { useInput } from "./../utils/forms";
 import { Toast } from "./../utils/notifications";
 import { Auth } from "aws-amplify";
-import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import {Button, Box} from "@material-ui/core";
 import { Link, useHistory } from "react-router-dom";
 import PatientPortalHeader from "./PatientPortalHeader";
+import LoadingBox from "./LoadingBox";
 
 const Field = styled(TextField)({
   margin: "10px 0",
@@ -58,39 +58,41 @@ const Signup = () => {
   };
 
   return (
-    <form
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-      }}
-      onSubmit={handleSignUp}
-    >
-      <PatientPortalHeader />
-      <h1 style={{ fontSize: "22px", fontWeight: 800 }}>
-        {" "}
-        New Account Registration
-      </h1>
-      <Field label="Username" {...bindUsername} />
-      <Field label="Email" {...bindEmail} type="email" />
-      <Field label="Password" type="password" {...bindPassword} />
-      <Field
-        label="Confirm Password"
-        type="password"
-        {...bindConfirmPassword}
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        size="large"
-        type="submit"
-        disabled={loading}
+    <Box position="relative">
+      { loading && <LoadingBox loading="true" />}
+      <form
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+        onSubmit={handleSignUp}
       >
-        {loading && <CircularProgress size={20} style={{ marginRight: 20 }} />}
+        <PatientPortalHeader />
+        <h1 style={{ fontSize: "22px", fontWeight: 800 }}>
+          {" "}
+        New Registration
+      </h1>
+        <Field label="Username" {...bindUsername} />
+        <Field label="Email" {...bindEmail} type="email" />
+        <Field label="Password" type="password" {...bindPassword} />
+        <Field
+          label="Confirm Password"
+          type="password"
+          {...bindConfirmPassword}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          type="submit"
+          disabled={loading}
+        >
         Register
       </Button>
-      <DLink to="/signin">Already Registered! Go to login &rarr;</DLink>
-    </form>
+        <DLink to="/signin">Already Registered! Go to login &rarr;</DLink>
+      </form>
+    </Box>
   );
 };
 

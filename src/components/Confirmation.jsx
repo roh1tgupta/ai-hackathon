@@ -4,10 +4,10 @@ import { styled } from "@material-ui/core/styles";
 import { useInput } from "./../utils/forms";
 import { Toast } from "./../utils/notifications";
 import { Auth } from "aws-amplify";
-import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import {Button, Box} from "@material-ui/core";
 import { Link, useHistory } from "react-router-dom";
 import PatientPortalHeader from "./PatientPortalHeader"
+import LoadingBox from "./LoadingBox";
 
 const Field = styled(TextField)({
   margin: "10px 0",
@@ -33,7 +33,7 @@ const Signup = () => {
     try {
       await Auth.confirmSignUp(username, code);
       Toast("Success!!", "Verified Successfully", "success");
-      history.push("/signin");
+      history.push("/login");
     } catch (error) {
       Toast("Error!!", error?.message, "danger");
     }
@@ -41,33 +41,35 @@ const Signup = () => {
   };
 
   return (
-    <form
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-      }}
-      onSubmit={handleSubmit}
-    >
-      <PatientPortalHeader />
-      <h1 style={{ fontSize: "22px", fontWeight: 800 }}>
-        {" "}
+    <Box position="relative">
+      { loading && <LoadingBox loading="true" />}
+      <form
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+        onSubmit={handleSubmit}
+      >
+        <PatientPortalHeader />
+        <h1 style={{ fontSize: "22px", fontWeight: 800 }}>
+          {" "}
         Verify Your Account
       </h1>
-      <Field label="Username" {...bindUsername} type="string" />
-      <Field label="Verification Code" {...bindCode} />
-      <Button
-        variant="contained"
-        color="primary"
-        size="large"
-        type="submit"
-        disabled={loading}
-      >
-        {loading && <CircularProgress size={20} style={{ marginRight: 20 }} />}
-        Verify your account
+        <Field label="Username" {...bindUsername} type="string" />
+        <Field label="Verification Code" {...bindCode} />
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          type="submit"
+          disabled={loading}
+        >
+        Verify
       </Button>
-      <DLink to="/signup">Create an account &rarr;</DLink>
-    </form>
+        <DLink to="/register">Create an account &rarr;</DLink>
+      </form>
+    </Box>
   );
 };
 

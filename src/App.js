@@ -9,6 +9,7 @@ import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import { COGNITO } from "./configs/aws";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PortalDataProvider from "./components/dataProvider/DataProvider";
 
 Amplify.configure({
   aws_cognito_region: COGNITO.REGION,
@@ -18,24 +19,26 @@ Amplify.configure({
 
 const App = () => {
   return (
-    <Box style={{ backgroundColor: "rgb(245, 245, 245)", height: "100vh", position: "relative", display: "flex" }}>
-    <Router>
-        <Switch>
-          <Route path="/signup">
-          <Card style={{ width: 500, margin: "auto", padding: "40px" }}><Signup /> </Card>
-          </Route>
-          <Route path="/signin">
-            <Card style={{ width: 500, margin: "auto", padding: "40px" }}><Login /> </Card>
-          </Route>
-          <Route path="/confirmation">
-            <Card style={{ width: 500, margin: "auto", padding: "40px" }}> <Confirmation /> </Card>
-          </Route>
-          <Route path="/">
-            <ProtectedRoute component={Dashboard} />
-          </Route>
-        </Switch>
-    </Router>
-    </Box>
+    <PortalDataProvider>
+      <Box style={{ backgroundColor: "rgb(245, 245, 245)", height: "100vh", position: "relative", display: "flex" }}>
+        <Router>
+          <Switch>
+            <Route path="/register">
+              <Card style={{ width: 500, margin: "auto", padding: "40px" }}><Signup /> </Card>
+            </Route>
+            <Route path="/login">
+              <Card style={{ width: 500, margin: "auto", padding: "40px" }}><Login /> </Card>
+            </Route>
+            <Route path="/confirmation">
+              <Card style={{ width: 500, margin: "auto", padding: "40px" }}> <Confirmation /> </Card>
+            </Route>
+            <Route path="/">
+              <ProtectedRoute component={Dashboard} />
+            </Route>
+          </Switch>
+        </Router>
+      </Box>
+    </PortalDataProvider>
   );
 };
 
