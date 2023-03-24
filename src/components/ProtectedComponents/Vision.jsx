@@ -5,7 +5,7 @@ const Dental = () => {
     
   return (
     <> 
-    <img src={vision} className="vision-image" alt="logo" style={{height: "90vh" , width: "73vw"}} />
+    <img src={vision} className="vision-image" alt="logo" style={{height: "90vh" , width: "73vw" }} />
     </>
   );
 };
