@@ -23,7 +23,6 @@ const useStyles = makeStyles(() =>
 
 export default function LoadingBox({ children, loading, success }) {
   const classes = useStyles();
-
   return (
     <Box className={`${classes.loadingBox} ${success ? classes.successStatus : ""}`}>
       {loading && <LinearProgress />}

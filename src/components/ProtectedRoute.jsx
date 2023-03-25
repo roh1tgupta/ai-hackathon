@@ -7,21 +7,13 @@ const ProtectedRoute = ({ component }) => {
   const [isAuthenticated, setLoggedIn] = React.useState(true);
   const [loading, setLoading] = React.useState(true);
   const { state, dispatch } = React.useContext(PortalConext);
-  console.log("reached here in private route")
-  React.useEffect(() => {
-    (async () => {
+  React.useEffect(async () => {
       let user = null;
-
       try {
         user = await Auth.currentAuthenticatedUser();
-        console.log(user, "...user..")
         setLoading(false);
         if (user) {
           console.log(user?.username, state?.username, state)
-          dispatch({
-            type: "SET_USER_NAME",
-            payload: user?.username
-          });
           setLoggedIn(true);
         } else {
           setLoggedIn(false);
@@ -31,7 +23,6 @@ const ProtectedRoute = ({ component }) => {
         setLoggedIn(false);
         setLoading(false);
       }
-    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

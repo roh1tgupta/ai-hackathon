@@ -7,6 +7,7 @@ import { useInput } from "../../utils/forms";
 import Card from "@material-ui/core/Card";
 import axios from "axios";
 import { PortalConext } from "../dataProvider/DataProvider";
+import LoadingBox from "../LoadingBox";
 
 const Field = styled(TextField)({
   margin: "10px 0",
@@ -23,13 +24,14 @@ const FormSubtitle = styled(Typography)({
   margin: "20px 0 10px",
 });
 
-const PatientForm = () => {
-  const { file: fileFromstore, dispatch } = useContext(PortalConext)
+const PatientForm = (props) => {
+  const { dispatch } = useContext(PortalConext);
+  const [loading, setIsLoading] = React.useState(false);
   const [files, setFiles] = React.useState();
   const [binFile, setBinFile] = React.useState();
   const { value: firstName, bind: bindFirstName } = useInput("");
   const { value: lastName, bind: bindLastName } = useInput("");
-  const { value: dateOfBirth, bind: bindDateOfBirth } = useInput("");
+  const { value: age, bind: bindAge } = useInput("");
   const { value: phoneNumber, bind: bindPhoneNumber } = useInput("");
   const { value: emailAddress, bind: bindEmailAddress } = useInput("");
   const { value: addressLine1, bind: bindAddressLine1 } = useInput("");
@@ -44,13 +46,40 @@ const PatientForm = () => {
   const { value: exerciseHabits, bind: bindExerciseHabits } = useInput("");
   const { value: sleepPatterns, bind: bindSleepPatterns } = useInput("");
 
+  const fileUrl = files?.[0] && URL.createObjectURL(files[0]);
 
+  let patientInfo = {};
   const onChangeHandler = (e) => {
     setFiles(e.target.files)
     var reader = new FileReader();
     reader.onload = function () { setBinFile(reader.result) };
     reader.readAsDataURL(e.target.files[0]);
   }
+
+  const onChangeHandler1 = (e) => {
+    var reader = new FileReader();
+    reader.onload = function () { 
+
+      console.log(reader.result);
+      // return ;
+      let cleansedImage = reader.result.replace(/^data:text\/\w+;base64,/, "");
+      let b64string = cleansedImage
+      let buffer = Buffer.from(b64string, 'base64');
+      axios({
+        url: "https://runtime.sagemaker.us-east-2.amazonaws.com/endpoints/sagemaker-xgboost-2023-03-24-10-56-26-886/invocations",
+        method: "POST",
+        headers: {
+          "Content-Type": "text/csv",
+        },
+        data: buffer
+      }).then(data => {
+        console.log(data);
+      }).catch(err => console.log(err));
+      // setBinFile(reader.result) 
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
   const handleSubmit = (event) => {
     dispatch({
       type: "SET_FILE_INFO",
@@ -59,6 +88,7 @@ const PatientForm = () => {
     let cleansedImage = binFile.replace(/^data:image\/\w+;base64,/, "");
     let b64string = cleansedImage
     let buffer = Buffer.from(b64string, 'base64');
+    setIsLoading(true);
     axios({
       url: "https://vbdh00lfoa.execute-api.us-east-1.amazonaws.com/prod/predict-flu",
       method: "POST",
@@ -71,14 +101,18 @@ const PatientForm = () => {
         type: "SET_PREDICT_FLU_MSG",
         payload: data?.data
       });
-      console.log(data.data)
-    }).catch(err => console.log(err));
+      dispatch({
+        type: "SET_PATIENT_INFO",
+        payload: {...patientInfo, result: data?.data }
+      });
+      console.log(data.data);
+      props.setIsNewPatient(false);
+    }).catch(err => console.log(err)).finally(() => setIsLoading(false))
 
     event.preventDefault();
-    console.log({
-      firstName,
+    patientInfo = { 
       lastName,
-      dateOfBirth,
+      age,
       phoneNumber,
       emailAddress,
       addressLine1,
@@ -92,11 +126,22 @@ const PatientForm = () => {
       diet,
       exerciseHabits,
       sleepPatterns,
-    });
+      // binFile,
+      // fileUrl 
+    };
+    dispatch({
+      type: "SET_PATIENT_INFO",
+      payload: {
+        ...patientInfo,
+      }
+    })
+    console.log(patientInfo);
+    
   };
 
   return (
-    <Box margin="25px 0">
+    <Box margin="25px 0" position="relative">
+      { loading && <LoadingBox loading={true} /> }
       {/* <Card style={{ width: 700, margin: "auto", padding: "40px" }}> */}
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
@@ -110,15 +155,15 @@ const PatientForm = () => {
             <Field label="Last Name" {...bindLastName} fullWidth />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Field label="Date of Birth" {...bindDateOfBirth} type="date" fullWidth />
+            <Field label="Age" {...bindAge} type="number" fullWidth />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <Field label="Phone Number" {...bindPhoneNumber} fullWidth />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={6}>
             <Field label="Email Address" {...bindEmailAddress} type="email" fullWidth />
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <FormSubtitle>Address Information</FormSubtitle>
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -132,7 +177,7 @@ const PatientForm = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Field label="State" {...bindState} fullWidth />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={6}>
             <Field label="Zip Code" {...bindZipCode} type="number" fullWidth />
           </Grid>
@@ -148,7 +193,7 @@ const PatientForm = () => {
           <Grid item xs={12} sm={6}>
             <Field label="Medications" {...bindMedications} fullWidth />
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <FormSubtitle>Life Style</FormSubtitle>
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -159,15 +204,17 @@ const PatientForm = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Field label="Sleep Pattern" {...bindSleepPatterns} fullWidth />
-          </Grid>
+          </Grid>  */}
           <Grid item xs={12} sm={6}>
             {/* <Field label="Xray Photo" onChange={(e, file) => setFiles(file)} type="file" accept="image/*" fullWidth /> */}
-            <Box position="relative" top="10px" >
+            <Box position="relative" top="18px" borderBottom="1px solid grey" >
               <InputLabel htmlFor="input-with-icon-adornment">
                 Upload XRAY
               </InputLabel>
-              <Input type="file" onChange={onChangeHandler} accept="image/*" />
-              {files && <img height="200px" width="200px" src={URL.createObjectURL(files[0])} />}
+              <input type="file" onChange={onChangeHandler} accept="image/*" required />
+              {files && <img height="200px" width="200px" src={fileUrl} />}
+
+              {/* <input type="file" onChange={onChangeHandler1} required /> */}
             </Box>
           </Grid>
           <Grid item xs={12} sm={12}>
