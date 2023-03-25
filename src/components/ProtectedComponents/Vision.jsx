@@ -26,7 +26,7 @@ const Dental = () => {
 
   return (
     <>
-    <div className="dental-container"> 
+    <div className="vision-container"> 
       <img src={images[currentIndex]} className="vision-image" alt="logo"  />
       <button className="book-button">Book an Appointment</button>
       <div className="datepicker-container">
