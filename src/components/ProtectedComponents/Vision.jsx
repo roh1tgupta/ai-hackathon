@@ -11,6 +11,7 @@ const Dental = () => {
   const [images, setImages] = useState([vision1, vision2, vision3,vision4]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,12 +25,20 @@ const Dental = () => {
     setSelectedDate(date);
   };
 
+  const handleBookAppointment = () => {
+    setIsPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
+
   return (
     <>
-    <div className="vision-container"> 
-      <img src={images[currentIndex]} className="vision-image" alt="logo"  />
-      <button className="book-button">Book an Appointment</button>
-      <div className="datepicker-container">
+      <div className="vision-container"> 
+        <img src={images[currentIndex]} className="vision-image" alt="logo"  />
+        <button className="book-button" onClick={handleBookAppointment}>Book an Appointment</button>
+        <div className="datepicker-container">
           <DatePicker
             selected={selectedDate}
             onChange={handleDateChange}
@@ -38,7 +47,15 @@ const Dental = () => {
             placeholderText="Select a date"
           />
         </div>
-       </div>
+      </div>
+      {isPopupOpen && (
+        <div className="popup-container">
+          <div className="popup">
+            <p>Appointment booked for {selectedDate.toLocaleDateString()}. For further queries, please contact us.</p>
+            <button className="close-popup-button" onClick={handleClosePopup}>Close</button>
+          </div>
+        </div>
+      )}
     </>
   );
 };
