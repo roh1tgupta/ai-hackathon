@@ -1,25 +1,26 @@
 import React from "react";
-import { Box, Grid, Divider, makeStyles, createStyles, Typography } from "@material-ui/core";
+import { Box, Grid } from "@material-ui/core";
 import { PortalConext } from "../dataProvider/DataProvider";
 
 let keyLabelArr = [
-  {key: "firstName", label: "First Name"},
-  {key: "lastName", label: "Last Name"},
-  {key: "age", label: "Age"},
-  {key: "existingMedicalConditions", label: "Existing Medical Condition"},
-  {key: "allergies", label: "Allergies"},
-  {key: "exerciseHabits", label: "Exercise Habits"},
+  { key: "name", label: "Name" },
+  { key: "age", label: "Age" },
+  { key: "weight", label: "Weight (in kgs)" },
+  { key: "height", label: "Height (in cms)" },
+  { key: "gluco", label: "Glucose Level" },
+  { key: "cholestrol", label: "Cholestrol" },
+  { key: "physicalActivity", label: "Physical Activities" },
+  { key: "alcohol", label: "Consume Alcohols" },
+  { key: "smoke", label: "Smoking" },
 ];
 
 export default function PatientInfo() {
   const { patientInfo } = React.useContext(PortalConext);
-  console.log(patientInfo)
   return (
     <>
       <Grid container spacing={2}>
         {keyLabelArr.map(k => {
-          console.log(k, k.label, patientInfo[k.key])
-          return <Grid item md={6} sm={6} xs={12}>
+          return <Grid item md={4} sm={6} xs={12}>
             <Box>
               <span>{k.label}</span>
               <p><b>{patientInfo[k.key] || "NA"}</b>  </p>

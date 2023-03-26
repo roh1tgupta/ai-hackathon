@@ -23,10 +23,10 @@ const App = () => {
       <Box style={{ backgroundColor: "rgb(245, 245, 245)", height: "100vh", position: "relative", display: "flex" }}>
         <Router>
           <Switch>
-            <Route path="/register">
+            <Route exact path="/register">
               <Card style={{ width: 500, margin: "auto", padding: "40px" }}><Signup /> </Card>
             </Route>
-            <Route path="/login">
+            <Route exact path="/login">
               <Card style={{ width: 500, margin: "auto", padding: "40px" }}><Login /> </Card>
             </Route>
             <Route path="/confirmation">

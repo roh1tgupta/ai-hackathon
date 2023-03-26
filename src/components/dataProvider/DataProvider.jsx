@@ -15,21 +15,9 @@ export default function PortalDataProvider(props) {
   const [state, dispatch] = useReducer(reducer, defaultContext);
 
   React.useEffect(() => {
-    let pinfo = localStorage.getItem("p_info");
-    if (pinfo) {
-      try {
-        pinfo = JSON.parse(pinfo);
-        dispatch({
-          type: "SET_PATIENT_INFO",
-          payload: pinfo
-        });
-      } catch (err) {
-        console.error("Error while fetching info from storage", err);
-      }
-    };
-    Auth.currentAuthenticatedUser().then(data => dispatch({
+    Auth.currentAuthenticatedUser().then(data => data?.username && dispatch({
       type: "SET_USER_NAME",
-      payload: data?.username
+      payload: data.username
     })).catch(err => console.error(err));
   }, [])
   return (
@@ -62,10 +50,14 @@ function reducer(state, action) {
         username: action?.payload,
       };
     case "SET_PATIENT_INFO":
-      localStorage.setItem("p_info", JSON.stringify(action.payload));
       return {
         ...state,
         patientInfo: { ...action?.payload },
+      };
+      case "SET_STATE":
+      return {
+        ...defaultContext,
+        ...action.payload,
       };
     default:
       return { ...state, ...action };

@@ -14,14 +14,17 @@ const tabs = [
 export const Nav = () => {
   const history = useHistory();
   const [value, setValue] = React.useState("patientinfo");
-  const { username } = React.useContext(PortalConext);
+  const { username, dispatch } = React.useContext(PortalConext);
   const handleChange = (e, value) => {
     setValue(value);
     history.push(`/${value}`);
   }
   const handleLogout = async () => {
-    await Auth.signOut();
-    history.push("/login");
+    dispatch({
+      type: "SET_STATE",
+      payload: {}
+    })
+    Auth.signOut();
   }
   return (
     <>
@@ -31,7 +34,7 @@ export const Nav = () => {
             <Box><PatientPortalHeader /> </Box>
             <Box fontSize="20px" textAlign="center" >
               <Box fontSize="12px">Hi <b>{username}</b> </Box>
-              <Link to="#" onClick={handleLogout} >Logout</Link>
+              <Link to="/login" onClick={handleLogout} >Logout</Link>
             </Box>
           </Box>
           <Box>
